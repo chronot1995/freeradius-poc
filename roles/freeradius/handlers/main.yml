@@ -1,0 +1,5 @@
+---
+- name: start freeradius
+  service:
+    name: freeradius
+    state: started

@@ -1,0 +1,9 @@
+A0-09-ED-0D-83-CC
+    Cleartext-Password := "A0-09-ED-0D-83-CC",
+    User-Name := "A0-09-ED-0D-83-CC",
+    Service-Type = Framed-User,
+    Tunnel-Type = VLAN,
+    Tunnel-Medium-Type = 6,
+#    Tunnel-Private-Group-id = 16,
+    Cisco-AVPair = "device-traffic-class=voice",
+    Reply-Message = "Device %{Calling-Station-ID} authorized"

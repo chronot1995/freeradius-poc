@@ -1,0 +1,71 @@
+---
+- name: Verify Linux Distro / Debian Buster
+  assert:
+    that:
+       - ansible_distribution == "Debian"
+       - ansible_distribution_release == "buster"
+       - ansible_distribution_version == "10"
+    msg: >
+      "This install requires Debian Buster. You are running {{ansible_distribution}} {{ansible_distribution_release}} {{ansible_distribution_version}}"
+
+- name: Install Apt for Repo addition
+  package:
+    name: ['python-apt']
+    state: latest
+
+- name: Add Debian Buster Backports Repo
+  apt_repository:
+    repo: deb http://deb.debian.org/debian buster-backports main
+    state: present
+    update_cache: yes
+
+- name: Install important
+  package:
+    name: ['open-vm-tools', 'vim', 'ntpdate', 'dnsutils', 'wget', 'less', 'locate']
+    state: latest
+
+- name: Enable locate DB
+  command: "{{item}}"
+  with_items:
+    - updatedb
+
+- name: Setup ntpdate config
+  copy:
+    src: configurations/cron.ntpdate
+    dest: /etc/cron.d/cron.ntpdate
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Set timezone to America/Chicago
+  timezone:
+    name: America/Chicago
+
+- name: Install LLDPd
+  package:
+    name: lldpd
+    state: latest
+
+- name: Correct LLDP Settings
+  lineinfile:
+    dest: /etc/lldpd.d/port_info.conf
+    line: "configure lldp portidsubtype ifname"
+    create: yes
+  notify: restart LLDP
+
+- name: Autostart LLDP
+  service:
+    name: lldpd
+    enabled: yes
+
+- name: Reboot host and wait for it to restart
+  reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 45
+    test_command: whoami
+
+- name: Flush Handlers, best practice
+  meta: flush_handlers

@@ -1,0 +1,10 @@
+#####
+# FreeRadius Ansible PoC Playbook
+#####
+
+- hosts: freetest
+  become: true
+  serial: 1
+  roles:
+  - serverPrep
+  - freeradius

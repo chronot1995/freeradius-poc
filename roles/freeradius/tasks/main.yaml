@@ -1,0 +1,48 @@
+---
+- name: Verify Linux Distro / Debian Buster
+  assert:
+    that:
+       - ansible_distribution == "Debian"
+       - ansible_distribution_release == "buster"
+       - ansible_distribution_version == "10"
+    msg: >
+      "This install requires Debian Buster. You are running {{ansible_distribution}} {{ansible_distribution_release}} {{ansible_distribution_version}}"
+
+- name: Install FreeRadius from Buster Backports
+  apt:
+    name: freeradius
+    state: latest
+    default_release: buster-backports
+    update_cache: yes
+
+- name: Copy FreeRadius configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: freerad
+    group: freerad
+    mode: 0644
+  with_items:
+    - { src: 'configurations/authorize', dest: '/etc/freeradius/3.0/mods-config/files/' }
+    - { src: 'configurations/eap', dest: '/etc/freeradius/3.0/mods-available/' }
+    - { src: 'configurations/clients.conf', dest: '/etc/freeradius/3.0/' }
+    - { src: 'configurations/default', dest: '/etc/freeradius/3.0/sites-available/' }
+    - { src: 'configurations/files', dest: '/etc/freeradius/3.0/mods-available/' }
+    - { src: 'configurations/authorized_macs', dest: '/etc/freeradius/3.0/mods-config/files/' }
+
+- name: Create a symbolic link
+  file:
+    src: /etc/freeradius/3.0/sites-available/coa
+    dest: /etc/freeradius/3.0/sites-enabled/coa
+    owner: freerad
+    group: freerad
+    state: link
+  notify: start freeradius
+
+- name: Autostart FreeRadius
+  service:
+    name: freeradius
+    enabled: yes
+
+- name: Flush Handlers, best practice
+  meta: flush_handlers

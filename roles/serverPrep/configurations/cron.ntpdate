@@ -1,0 +1,1 @@
+0,11 * * * * root /usr/sbin/ntpdate time.google.com

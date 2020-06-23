@@ -1,0 +1,5 @@
+---
+- name: restart LLDP
+  service:
+    name: lldpd
+    state: restarted
