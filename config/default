@@ -1,0 +1,212 @@
+server default {
+listen {
+	type = auth
+	ipaddr = *
+	port = 0
+	limit {
+	      max_connections = 16
+	      lifetime = 0
+	      idle_timeout = 30
+	}
+}
+listen {
+	ipaddr = *
+#	ipv6addr = ::
+	port = 0
+	type = acct
+#	interface = eth0
+#	clients = per_socket_clients
+
+	limit {
+	}
+}
+
+# IPv6 versions of the above - read their full config to understand options
+listen {
+	type = auth
+	ipv6addr = ::	# any.  ::1 == localhost
+	port = 0
+#	interface = eth0
+#	clients = per_socket_clients
+	limit {
+	      max_connections = 16
+	      lifetime = 0
+	      idle_timeout = 30
+	}
+}
+
+listen {
+	ipv6addr = ::
+	port = 0
+	type = acct
+#	interface = eth0
+#	clients = per_socket_clients
+
+	limit {
+#		max_pps = 0
+#		idle_timeout = 0
+#		lifetime = 0
+#		max_connections = 0
+	}
+}
+authorize {
+	filter_username
+	preprocess
+
+	rewrite_calling_station_id
+  ## This block is for RADIUS AAA into the switch
+  if (Service-Type == Authenticate-Only) {
+  	if (!ok) {
+    		reject
+    }
+    else {
+    		update control {
+        		Auth-Type := Accept
+        }
+    }
+  }
+	## Catch the "radtest testinguser cumulus11 localhost 0 testing123" command
+	elsif (!EAP-Message && NAS-Port == 0) {
+		if (!ok){
+			reject
+		}
+
+		else {
+			update control {
+				Auth-Type := Accept
+			}
+		}
+	}
+	## This block is for MAC Authentication
+	elsif (!EAP-Message && Service-Type == Call-Check) {
+
+		authorized_macs
+
+		if (!ok) {
+			reject
+		}
+
+		else {
+
+			update control {
+      	Auth-Type := Accept
+      }
+    }
+	}
+  ### PAP Authentication testing
+	elsif (!EAP-Message) {
+
+		if (!ok) {
+			reject
+		}
+
+		else {
+
+			update control {
+      	Auth-Type := Accept
+      }
+    }
+	}
+
+	else {
+  	eap
+  }
+
+	chap
+	mschap
+	digest
+
+	suffix
+#	ntdomain
+
+	eap {
+		ok = return
+#		updated = return
+	}
+
+	files
+	-sql
+	-ldap
+	expiration
+	logintime
+
+	pap
+
+}
+
+authenticate {
+	Auth-Type PAP {
+		pap
+	}
+
+	Auth-Type CHAP {
+		chap
+	}
+
+	Auth-Type MS-CHAP {
+		mschap
+	}
+
+	mschap
+	digest
+	eap
+
+}
+
+preacct {
+	preprocess
+
+	acct_unique
+
+	suffix
+	files
+}
+
+accounting {
+	detail
+	unix
+	-sql
+
+	exec
+	attr_filter.accounting_response
+
+}
+
+session {
+}
+
+post-auth {
+
+#	if (session-state:User-Name && reply:User-Name && request:User-Name && (reply:User-Name == request:User-Name)) {
+#		update reply {
+#			&User-Name !* ANY
+#		}
+#	}
+	update {
+		&reply: += &session-state:
+	}
+
+	-sql
+	exec
+	remove_reply_message_if_eap
+	Post-Auth-Type REJECT {
+		-sql
+		attr_filter.access_reject
+
+		eap
+
+		remove_reply_message_if_eap
+	}
+
+	Post-Auth-Type Challenge {
+	}
+
+}
+
+pre-proxy {
+}
+
+post-proxy {
+	eap
+}
+}

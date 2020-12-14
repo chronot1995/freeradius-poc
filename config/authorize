@@ -1,0 +1,20 @@
+# Initial Test:
+testing Cleartext-Password := "password"
+
+testinguser	Cleartext-Password := "cumulus11"
+		Tunnel-Type = "VLAN",
+		Tunnel-Medium-Type = "IEEE-802",
+		Tunnel-Private-Group-Id = "17",
+		Service-Type = NAS-Prompt-User,
+    Cisco-AVPair = "shell:priv-lvl=15"
+
+DEFAULT	Framed-Protocol == PPP
+	Framed-Protocol = PPP,
+	Framed-Compression = Van-Jacobson-TCP-IP
+
+DEFAULT	Hint == "CSLIP"
+	Framed-Protocol = SLIP,
+	Framed-Compression = Van-Jacobson-TCP-IP
+
+DEFAULT	Hint == "SLIP"
+	Framed-Protocol = SLIP

@@ -1,143 +1,20 @@
-version: "3.3"
+version: '3.3'
 
 services:
-  db:
-    image: mariadb:10.4
-    container_name: librenms_db
-    command:
-      - "mysqld"
-      - "--innodb-file-per-table=1"
-      - "--lower-case-table-names=0"
-      - "--character-set-server=utf8"
-      - "--collation-server=utf8_unicode_ci"
-    volumes:
-      - "./db:/var/lib/mysql"
-    environment:
-      - "TZ=${TZ}"
-      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
-      - "MYSQL_DATABASE=${MYSQL_DATABASE}"
-      - "MYSQL_USER=${MYSQL_USER}"
-      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
-    restart: always
 
-  memcached:
-    image: memcached:alpine
-    container_name: librenms_memcached
-    environment:
-      - "TZ=${TZ}"
-    restart: always
+ freeradius:
+  image: freeradius/freeradius-server:3.0.21
+  ports:
+    - target: 1812
+      published: 1812
+#      protocol: udp
+    - target: 1813
+      published: 1813
+#      protocol: udp
+  volumes:
 
-  redis:
-    image: redis:5.0-alpine
-    container_name: librenms_redis
-    environment:
-      - "TZ=${TZ}"
-    restart: always
+# Mike Note: put the individual files and reference them in here:
+  - "./freeradius/config/freeradius:/etc/freeradius"
+  - "./freeradius/logs:/var/log/freeradius"
 
-  rrdcached:
-    image: crazymax/rrdcached
-    container_name: librenms_rrdcached
-    volumes:
-      - "./librenms/rrd:/data/db"
-      - "./rrd-journal:/data/journal"
-    environment:
-      - "TZ=${TZ}"
-      - "PUID=${PUID}"
-      - "PGID=${PGID}"
-      - "LOG_LEVEL=LOG_INFO"
-      - "WRITE_TIMEOUT=1800"
-      - "WRITE_JITTER=1800"
-      - "WRITE_THREADS=4"
-      - "FLUSH_DEAD_DATA_INTERVAL=3600"
-    restart: always
-
-  msmtpd:
-    image: crazymax/msmtpd:latest
-    container_name: librenms_msmtpd
-    env_file:
-      - "./msmtpd.env"
-    restart: always
-
-  librenms:
-    image: librenms/librenms:1.65.1
-    container_name: librenms
-    hostname: librenms
-    ports:
-      - target: 8000
-        published: 8000
-        protocol: tcp
-    depends_on:
-      - db
-      - memcached
-      - rrdcached
-      - msmtpd
-    volumes:
-      - "./librenms:/data"
-    env_file:
-      - "./librenms.env"
-    environment:
-      - "TZ=${TZ}"
-      - "PUID=${PUID}"
-      - "PGID=${PGID}"
-      - "DB_HOST=db"
-      - "DB_NAME=${MYSQL_DATABASE}"
-      - "DB_USER=${MYSQL_USER}"
-      - "DB_PASSWORD=${MYSQL_PASSWORD}"
-      - "DB_TIMEOUT=60"
-    restart: always
-
-  dispatcher:
-    image: librenms/librenms:1.65.1
-    container_name: librenms_dispatcher
-    hostname: librenms-dispatcher
-    depends_on:
-      - librenms
-      - redis
-    volumes:
-      - "./librenms:/data"
-    env_file:
-      - "./librenms.env"
-    environment:
-      - "TZ=${TZ}"
-      - "PUID=${PUID}"
-      - "PGID=${PGID}"
-      - "DB_HOST=db"
-      - "DB_NAME=${MYSQL_DATABASE}"
-      - "DB_USER=${MYSQL_USER}"
-      - "DB_PASSWORD=${MYSQL_PASSWORD}"
-      - "DB_TIMEOUT=60"
-      - "DISPATCHER_NODE_ID=dispatcher1"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=0"
-      - "SIDECAR_DISPATCHER=1"
-    restart: always
-
-  syslogng:
-    image: librenms/librenms:1.65.1
-    container_name: librenms_syslogng
-    hostname: librenms-syslogng
-    depends_on:
-      - librenms
-    ports:
-      - target: 514
-        published: 514
-        protocol: tcp
-      - target: 514
-        published: 514
-        protocol: udp
-    volumes:
-      - "./librenms:/data"
-    env_file:
-      - "./librenms.env"
-    environment:
-      - "TZ=${TZ}"
-      - "PUID=${PUID}"
-      - "PGID=${PGID}"
-      - "DB_HOST=db"
-      - "DB_NAME=${MYSQL_DATABASE}"
-      - "DB_USER=${MYSQL_USER}"
-      - "DB_PASSWORD=${MYSQL_PASSWORD}"
-      - "DB_TIMEOUT=60"
-      - "SIDECAR_SYSLOGNG=1"
-    restart: always
+  restart: always

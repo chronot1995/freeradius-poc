@@ -4,7 +4,17 @@
 
 ### Description:
 
-This is an Ansible Playbook to setup a FreeRadius server using Docker for a Cumulus Networks PoC
+This is an Ansible Playbook to setup a FreeRadius server using Docker. This is used for a Cumulus Networks PoC on a Debian 10 VM or bare-metal server
+
+### Configuration:
+
+
+
+### Testing the above:
+
+```
+docker run -it --rm --network docker-freeradius_backend 2stacks/radtest radtest testing password freeradius 0 testing123
+```
 
 ### Errata:
 

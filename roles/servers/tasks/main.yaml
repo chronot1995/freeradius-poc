@@ -9,21 +9,13 @@
   apt:
     update_cache: yes
 
-- name: Install Docker and SNMP
+- name: Install Docker and Docker Compose
   apt:
     name: "{{ item }}"
     state: latest
   with_items:
     - docker.io
     - docker-compose
-    - snmp
-    - snmp-mibs-downloader
-
-- name: Replace a localhost entry with our own
-  lineinfile:
-    path: /etc/snmp/snmp.conf
-    regexp: '^ mibs'
-    line: '# mibs'
 
 - name: Flush Handlers, best practice
   meta: flush_handlers
