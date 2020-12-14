@@ -1,0 +1,23 @@
+- name: Simple Debug Script
+  hosts: k8smaster
+  gather_facts: yes
+
+  tasks:
+   - debug:
+       msg: "{{ inventory_hostname }}"
+
+   - debug:
+       msg: "{{ hostvars[inventory_hostname].ansible_hostname }}"
+
+#   - debug:
+#       msg: "se{{ node[inventory_hostname].seLabNum }}1.se{{ node[inventory_hostname].seLabNum }}.diamanti.com"
+
+#   - debug:
+#       msg: "172.16.{{ node[inventory_hostname].privSubnet }}.2"
+
+#   - debug:
+#       msg: "{{ node[inventory_hostname].routing.lo | regex_replace('/32')}}"
+
+#   - debug:
+#       msg: "add interface {{ item }} ospf network point-to-point"
+#     with_items: "{{ node[inventory_hostname].routing.ospf.neighbors }}"

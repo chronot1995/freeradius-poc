@@ -1,0 +1,29 @@
+- name: Verify Minimum Software Version - Ubuntu 18.04
+  assert:
+    that: "{{ansible_lsb.release is version_compare('18.04', '>=') }}"
+    msg: >
+      "Ubuntu must be version 18.04.
+      Version {{ansible_lsb.release}} detected"
+
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: yes
+
+- name: Install Docker and SNMP
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - docker.io
+    - docker-compose
+    - snmp
+    - snmp-mibs-downloader
+
+- name: Replace a localhost entry with our own
+  lineinfile:
+    path: /etc/snmp/snmp.conf
+    regexp: '^ mibs'
+    line: '# mibs'
+
+- name: Flush Handlers, best practice
+  meta: flush_handlers
