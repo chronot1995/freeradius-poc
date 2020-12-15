@@ -9,7 +9,7 @@ services:
   ports:
     - "1812:1812/udp"
     - "1813:1813/udp"
-  command: ["radiusd", "-X", "-t"] # Debug mode with colour
+  command: ["freeradius", "-X", "-t"] # Debug mode with colour
   volumes:
   - "./config/authorize:/etc/freeradius/3.0/mods-config/files/authorize"
   - "./config/authorized_macs:/etc/freeradius/3.0/mods-config/files/authorized_macs"
