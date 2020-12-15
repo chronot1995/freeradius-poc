@@ -3,7 +3,7 @@ version: '3.2'
 services:
 
  freeradius:
-  image: freeradius/freeradius-server:3.0.21-alpine
+  image: freeradius/freeradius-server:3.0.21
   container_name: freeradius
 #  network_mode: bridge
   ports:
