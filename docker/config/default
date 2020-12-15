@@ -1,7 +1,7 @@
 server default {
 listen {
 	type = auth
-	ipaddr = *
+	ipaddr = 192.168.200.1
 	port = 0
 	limit {
 	      max_connections = 16
