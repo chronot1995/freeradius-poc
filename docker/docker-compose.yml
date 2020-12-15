@@ -5,8 +5,8 @@ services:
  freeradius:
   image: freeradius/freeradius-server:3.0.21
   ports:
-    - "1812:1812/udp"
-    - "1813:1813/udp"
+    - "192.168.200.1:1812:1812/udp"
+    - "192.168.200.1:1813:1813/udp"
   volumes:
   - "./config/authorize:/etc/freeradius/3.0/mods-config/files/authorize"
   - "./config/authorized_macs:/etc/freeradius/3.0/mods-config/files/authorized_macs"
