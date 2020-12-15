@@ -12,9 +12,11 @@ services:
       published: 1813
 #      protocol: udp
   volumes:
-
-# Mike Note: put the individual files and reference them in here:
-  - "./freeradius/config/freeradius:/etc/freeradius"
-  - "./freeradius/logs:/var/log/freeradius"
+  - "../config/authorize:/etc/freeradius/3.0/mods-config/files/authorize"
+  - "../config/authorized_macs:/etc/freeradius/3.0/mods-config/files/authorized_macs"
+  - "../config/clients.conf:/etc/freeradius/3.0/clients.conf"
+  - "../config/default:/etc/freeradius/3.0/sites-available/default"
+  - "../config/eap:/etc/freeradius/3.0/mods-available/eap"
+  - "../config/files:/etc/freeradius/3.0/mods-available/files"
 
   restart: always

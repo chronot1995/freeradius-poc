@@ -13,7 +13,7 @@ This is an Ansible Playbook to setup a FreeRadius server using Docker. This is u
 ### Testing the above:
 
 ```
-docker run -it --rm --network docker-freeradius_backend 2stacks/radtest radtest testing password freeradius 0 testing123
+docker run -it --rm 2stacks/radtest radtest john testing123 localhost 0 testing123
 ```
 
 ### Errata:
