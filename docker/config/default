@@ -10,7 +10,7 @@ listen {
 	}
 }
 listen {
-	ipaddr = *
+	ipaddr = 192.168.200.1
 #	ipv6addr = ::
 	port = 0
 	type = acct
