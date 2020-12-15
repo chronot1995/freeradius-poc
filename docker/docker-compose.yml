@@ -1,22 +1,18 @@
-version: '3.3'
+version: '3.2'
 
 services:
 
  freeradius:
   image: freeradius/freeradius-server:3.0.21
   ports:
-    - target: 1812
-      published: 1812
-#      protocol: udp
-    - target: 1813
-      published: 1813
-#      protocol: udp
+    - "1812:1812/udp"
+    - "1813:1813/udp"
   volumes:
-  - "../config/authorize:/etc/freeradius/3.0/mods-config/files/authorize"
-  - "../config/authorized_macs:/etc/freeradius/3.0/mods-config/files/authorized_macs"
-  - "../config/clients.conf:/etc/freeradius/3.0/clients.conf"
-  - "../config/default:/etc/freeradius/3.0/sites-available/default"
-  - "../config/eap:/etc/freeradius/3.0/mods-available/eap"
-  - "../config/files:/etc/freeradius/3.0/mods-available/files"
+  - "./config/authorize:/etc/freeradius/3.0/mods-config/files/authorize"
+  - "./config/authorized_macs:/etc/freeradius/3.0/mods-config/files/authorized_macs"
+  - "./config/clients.conf:/etc/freeradius/3.0/clients.conf"
+  - "./config/default:/etc/freeradius/3.0/sites-available/default"
+  - "./config/eap:/etc/freeradius/3.0/mods-available/eap"
+  - "./config/files:/etc/freeradius/3.0/mods-available/files"
 
   restart: always
