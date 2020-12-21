@@ -7,5 +7,5 @@ files {
 
 files authorized_macs {
   key = "%{Calling-Station-ID}"
-  usersfile = /etc/freeradius/3.0/mods-config/files/authorized_macs
+  usersfile = /etc/raddb/mods-config/files/authorized_macs
 }

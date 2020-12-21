@@ -3,17 +3,11 @@ version: '3.2'
 services:
 
  freeradius:
-  image: freeradius/freeradius-server:3.0.21
-  container_name: freeradius
-#  network_mode: bridge
+  image: nvidia/radius
+  build:
+      context: ./
+      dockerfile: Dockerfile
+  container_name: freeradius-poc
   ports:
     - "1812:1812/udp"
     - "1813:1813/udp"
-#  command: ["freeradius", "-X", "-t"] # Debug mode with colour
-  volumes:
-  - "./config/authorize:/etc/freeradius/3.0/mods-config/files/authorize"
-  - "./config/authorized_macs:/etc/freeradius/3.0/mods-config/files/authorized_macs"
-  - "./config/clients.conf:/etc/freeradius/3.0/clients.conf"
-  - "./config/default:/etc/freeradius/3.0/sites-available/default"
-  - "./config/eap:/etc/freeradius/3.0/mods-available/eap"
-  - "./config/files:/etc/freeradius/3.0/mods-available/files"
