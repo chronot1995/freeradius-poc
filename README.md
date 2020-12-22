@@ -2,7 +2,7 @@
 
 ### Description:
 
-This container-based demo has been rewritten to use Alpine Linux for a FreeRadius PoC with Cumulus Linux. The FreeRadius PoC will be able to provide RADIUS authentication to a Cumulus switch, wired 802.1x access to a Cumulus Switch, and MAC authentication to a Cumulus Switch. This has been verified with Cumulus Linux 4.2.1. It has been instantiated on a Debian Buster server running Docker and macOS running Docker Desktop.
+This container-based demo has been rewritten to use Alpine Linux for a FreeRadius PoC with Cumulus Linux. The FreeRadius PoC can provide RADIUS authentication to a Cumulus switch, Wired 802.1x access to a Cumulus Switch, and Wired MAC authentication to a Cumulus Switch. This has been verified with Cumulus Linux 4.2.1. It has been instantiated on a Debian Buster server running Docker and macOS running Docker Desktop.
 
 ### Configuration:
 
@@ -124,6 +124,12 @@ testinguser Cleartext-Password := "cumulus11"
 ```
 
 The above has a couple of important pieces. First, the last line, "Cisco-AVPair = "shell:priv-lvl=15"" defines the RADIUS AAA Authentication to the switch. The other fields are important to pass VLAN "17" to your Cumulus Switch. This RADIUS VSA (Vendor Specific Attribute) should be tailored to your environment if you would like to demonstrate VLAN the Dynamic VLAN functionality
+
+4. One will need to configure Wired 802.1x access on the Windows / Mac / Linux machine. Here are some helpful articles:
+
+Windows - https://www.technology.pitt.edu/help-desk/how-to-documents/pittnetwired-configuring-windows-10-wired-publicly-accessible-network
+macOS - https://www.it.miami.edu/_assets/pdf/802.1x-wired.pdf
+Linux - https://help.ubuntu.com/community/Network802.1xAuthentication
 
 ### Testing Wired MAC Authentication to a Cumulus Switch
 
