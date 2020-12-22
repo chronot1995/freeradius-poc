@@ -115,7 +115,7 @@ in the "authorize" file
 3. Here is an example entry from this file:
 
 ```
-testinguser	Cleartext-Password := "cumulus11"
+testinguser Cleartext-Password := "cumulus11"
 		Tunnel-Type = "VLAN",
 		Tunnel-Medium-Type = "IEEE-802",
 		Tunnel-Private-Group-Id = "17",
