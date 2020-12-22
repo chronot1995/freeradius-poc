@@ -1,16 +1,39 @@
 ### freeradius-poc
 
-### WORK IN PROGRESS ###
-
 ### Description:
 
-This container-based radius demo has been rewritten to use Alpine Linux with Docker as a FreeRadius PoC for Cumulus Linux
+This container-based demo has been rewritten to use Alpine Linux for a FreeRadius PoC with Cumulus Linux. This has been verified on a Debian Buster server running Docker and macOS running Docker Desktop.
 
 ### Configuration:
 
-git clone
-cd freeradius-poc/docker
+1. The first step in this demo is to setup Docker on the appropriate server. There is an Ansible playbook that installs the Docker components
+
+```
+git clone https://gitlab.com/nvidia-networking/systems-engineering/poc-support/freeradius-poc
+```
+
+```
+cd freeradius-poc
+```
+
+In this directory is a sample "hosts" file. Make the appropriate changes to your username, password, and IP address for your server. Once that is complete, run the playbook with the following command:
+
+```
+ansible-playbook freeradius.yml
+```
+
+2. After Docker is installed, the next step is to build and run the FreeRadius container. Switch directories to the Docker directory:
+
+```
+cd docker
+```
+run the following command:
+
+```
 sudo docker-compose up -d
+```
+
+This will build and 
 
 ### Authentication
 
